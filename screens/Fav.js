@@ -1,47 +1,38 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { db } from '../firebase/config';
-import { collection, getDocs } from 'firebase/firestore';
-import { styles } from './Login';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { userId } from './Login';
+import { Text, View, TouchableOpacity } from 'react-native';
 
-const Favorite = () => {
-    const [data, setData] = useState([]);
+const UserJokes = () => {
+  const [jokes, setJokes] = useState([]);
 
-    const renderItem = ({ item }) => {
-        return (
-            <View>
-                <Text>{item['joke']}</Text>
-            </View>
-        )
-    }
-
-    const getData = async () => {
-        const querySnapshot = await getDocs(collection(db, 'Jokes'));
-        querySnapshot.forEach(obj => {
-          const field = obj.data();
-          const allData = {
-            joke: field.joke,
-            timeStamp: field.timeStamp,
-          }
-          setData(prevItem => [...prevItem, allData])
-        })
-        // console.log(Array.isArray(data));
+  useEffect(() => {
+    const fetchUserJokes = async () => {
+      const userJokesQuery = query(collection(db, 'users'), where('id', '==', userId));
+      const userJokesSnapshot = await getDocs(userJokesQuery);
+      if (!userJokesSnapshot.empty) {
+        const userJokesData = userJokesSnapshot.docs[0].data();
+        setJokes(userJokesData.joke);
       }
+    };
 
-      useEffect(() => {
-        getData();
-      }, []);
+    fetchUserJokes();
+  }, [userId]);
 
   return (
-    <View style={styles.container}>
-        <FlatList
-            data={data}
-            renderItem={renderItem} 
-        />
+    <View>
+      {jokes.length > 0 ? (
+        <View>
+          {jokes.map((joke, index) => (
+            <Text key={index}>{joke}</Text>
+          ))}
+        </View>
+      ) : (
+        <Text>No jokes found for this user.</Text>
+      )}
     </View>
-  )
-}
+  );
+};
 
-export default Favorite
-
-// const styles = StyleSheet.create({})
+export default UserJokes;

@@ -13,7 +13,6 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-
     const signIn = async () => {
         if (email.length != 0 && password.length != 0) {
             signInWithEmailAndPassword(auth, email, password)

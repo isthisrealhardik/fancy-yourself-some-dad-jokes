@@ -6,14 +6,43 @@ import { signOut } from 'firebase/auth'
 import { auth } from '../firebase/config'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { db } from '../firebase/config'
-import { addDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore'
+import { addDoc, arrayUnion, collection, doc, getDocs, serverTimestamp, setDoc, getDoc, updateDoc } from 'firebase/firestore'
 import { userId } from './Login'
+
+export let usersCollections = null;
 
 const Main = ({ navigation }) => {
 
   const [jokes, setJokes] = useState(null)
   const [favorite, setFavorite] = useState(false);
 
+  // adds a new collection called 'users'
+  usersCollections = collection(db, 'users');
+
+  // fetches the id of the user
+  let id = userId; 
+
+  // by using the uder's id you create a new document in the users collection
+  const createADocument = async () => {
+    const docRefTwo = doc(usersCollections, id);
+    const docSnap = await getDoc(docRefTwo);
+
+    if (!docSnap.exists()) {
+      await setDoc(docRefTwo, { id, joke: [] });
+      console.log(`Document created with the id: ${docRefTwo.id}`)
+    } else {
+      console.log(`Document already exists with the id: ${docRefTwo.id}`)
+    }
+    
+  }
+
+  // add the joke to the joke field
+  const addAJoke = async () => {
+    const userDocRef = doc(usersCollections, id);
+    await updateDoc(userDocRef, { joke: arrayUnion(jokes['joke']) })
+    console.log(`Document add with the id: ${userDocRef.id}`)
+    setFavorite(true);
+  }
 
   useEffect(() => {
     fetch('https://icanhazdadjoke.com/', {
@@ -24,6 +53,8 @@ const Main = ({ navigation }) => {
       .then(response => response.json())
       .then(data => setJokes(data))
       .catch(error => console.error(error))
+
+      createADocument();
   }, [])
   
   const fetchDadJokes = () => {
@@ -37,16 +68,6 @@ const Main = ({ navigation }) => {
       .catch(error => console.error(error))
     setFavorite(false)
   }
-
-  const addToDb = async () => {
-    const docRef = await addDoc(collection(db, 'Jokes'), {
-      joke: jokes['joke'],
-      timeStamp: serverTimestamp(),
-    })
-    console.log(`Document add with the id: ${docRef.id}`)
-    setFavorite(true)
-  }
-
 
   const signOutHandle = () => {
     signOut(auth)
@@ -70,7 +91,7 @@ const Main = ({ navigation }) => {
         <Text style={styles.buttonText}>Fetch Dad Jokes</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={addToDb}
+        onPress={addAJoke}
       >
         <Icon name={favorite ? 'favorite' : 'favorite-border'} color={'#000'} size={30}/>
       </TouchableOpacity>
