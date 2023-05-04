@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { db } from '../firebase/config'
 import { addDoc, arrayUnion, collection, doc, getDocs, serverTimestamp, setDoc, getDoc, updateDoc } from 'firebase/firestore'
 import { userId } from './Login'
+import { styling } from './Entry'
 
 export let usersCollections = null;
 
@@ -81,25 +82,28 @@ const Main = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>You're ready for some Dad Jokes?</Text>
-      {jokes && (<Text>{jokes['joke']}</Text>)}
+    <View style={[styles.container, { backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }]}>
+      {/* <Text style={{ fontSize: 20, fontWeight: '400', textTransform: 'uppercase', }} >You're ready for some Dad Jokes?</Text> */}
+      {jokes && (<View style={{ width: '100%', height: 350, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 30 }}>
+        <Text style={{ fontSize: 40, fontWeight: '700' }} >{jokes['joke']}</Text>
+      </View>)}
       <TouchableOpacity
         onPress={fetchDadJokes}
-        style={styles.button}
+        style={[styling.button, { marginTop: 10 }]}
       >
-        <Text style={styles.buttonText}>Fetch Dad Jokes</Text>
+        <Text style={styling.buttonText}>Fetch Dad Jokes</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={addAJoke}
+        style={{ marginVertical: 20 }}
       >
-        <Icon name={favorite ? 'favorite' : 'favorite-border'} color={'#000'} size={30}/>
+        <Icon name={favorite ? 'favorite' : 'favorite-border'} color={'#000'} size={50} />
       </TouchableOpacity>
       <TouchableOpacity 
-          style={styles.button}
+          style={[styling.button]}
           onPress={signOutHandle}
       >
-        <Text style={styles.buttonText}>Sign Out</Text>
+        <Text style={[styling.buttonText]}>Sign Out</Text>
       </TouchableOpacity>
     </View>
   )

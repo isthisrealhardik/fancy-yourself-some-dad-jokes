@@ -18,14 +18,15 @@ const UserJokes = () => {
     };
 
     fetchUserJokes();
-  }, [userId]);
+  });
 
   return (
-    <View>
+    <View style={{ backgroundColor: 'white', justifyContent: 'flex-start', alignItems: 'center', height: '100%', width: '100%', paddingHorizontal: 20, paddingVertical: 45 }} >
+      <Text style={{ fontSize: 30, fontWeight: '700', textTransform: 'uppercase' }} >Favorites</Text>
       {jokes.length > 0 ? (
-        <View>
+        <View >
           {jokes.map((joke, index) => (
-            <Text key={index}>{joke}</Text>
+            <Text style={{ marginVertical: 10, fontSize: 18, borderRadius: 10, borderColor: 'grey', borderWidth: 1, paddingVertical: 10, paddingHorizontal: 10 }} key={index}>{joke}</Text>
           ))}
         </View>
       ) : (

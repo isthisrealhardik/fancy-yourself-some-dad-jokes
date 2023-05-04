@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase/config'
 import { Alert } from 'react-native'
+import { styling } from './Entry'
 
 export let userId = null;
 
@@ -39,21 +40,28 @@ const Login = ({ navigation }) => {
     }
 
   return (
-    <View style={styles.container}>
-        <Text>You Like Dad Jokes Ehh?</Text>
-        <View>
-            <TextInput value={email} onChangeText={setEmail} placeholder='Email..' />
-            <TextInput value={password} onChangeText={setPassword} secureTextEntry placeholder='Password...' />
+    <View style={[styles.container, { backgroundColor: 'white' }]}>
+        <Text style={[styling.bigText, { fontSize: 25, }]} >You Like Dad Jokes Ehh?</Text>
+        {/* <View style={{ flexDirection: 'column', justifyContent: 'flex-start', width: '100%', alignItems: "flex-start", paddingHorizontal: 40, }}>
+            <Text style={{ fontSize: 40, fontWeight: '500', textTransform: 'uppercase' }} >You</Text>
+            <Text style={{ fontSize: 40, fontWeight: '500', textTransform: 'uppercase' }} >Like</Text>
+            <Text style={{ fontSize: 40, fontWeight: '500', textTransform: 'uppercase' }} >Dad</Text>
+            <Text style={{ fontSize: 40, fontWeight: '500', textTransform: 'uppercase' }} >Jokes?</Text>
+        </View> */}
+        <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <TextInput style={{ borderBottomColor: 'black', borderBottomWidth: 1, padding: 0, height: 30, width: 300, marginBottom: 10 }} value={email} onChangeText={setEmail} placeholder='Email..' />
+            <TextInput style={{ borderBottomColor: 'black', borderBottomWidth: 1, padding: 0, height: 30, width: 300, marginBottom: 10 }} value={password} onChangeText={setPassword} secureTextEntry placeholder='Password...' />
             <TouchableOpacity
                 onPress={signIn}
-                style={styles.button}
+                style={[styling.button, { marginVertical: 10, width: 300, justifyContent: 'center', alignItems: 'center' }]}
             >
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => navigation.navigate('Signup')}
+                style={{ marginVertical: 5 }}
             >
-                <Text >Don't have an account?, <Text>Register</Text>?</Text>
+                <Text style={{ fontWeight: '300' }}>Don't have an account, <Text style={{ fontWeight: '500' }}>Register</Text>?</Text>
             </TouchableOpacity>
         </View>
     </View>
@@ -67,6 +75,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
+        width: '100%',
     },
     button: {
         padding: 10, 
